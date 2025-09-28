@@ -1,4 +1,5 @@
 import BlogDetailsCard from '@/components/modules/Blogs/BlogDetailsCard';
+import { getBlogById } from '@/services/PostServices';
 import { BlogDetailsPageProps, BlogPost } from '@/types';
 import { Description } from '@radix-ui/react-dialog';
 
@@ -12,6 +13,7 @@ import { Description } from '@radix-ui/react-dialog';
 //     }));
 // }
 
+// Generating Static Params
 export const generateStaticParams = async () => {
     try {
         const res = await fetch(`${process.env.EXT_PUBLIC_BASE_API}/post`);
@@ -28,13 +30,12 @@ export const generateStaticParams = async () => {
     }
 }
 
+// Generating Dynamic Metadata
 export const generateMetadata = async ({ params }: BlogDetailsPageProps) => {
     const { blogId } = params;
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post/${blogId}`);
-        if(!res.ok) throw new Error(`Failed to fetch blog`)
-        const json = await res.json();
-        const blog = json?.data;
+        
+        const blog = await getBlogById(blogId);
 
         return {
             title: blog?.title,
@@ -55,13 +56,7 @@ const BlogDetailsPage = async ({ params }: BlogDetailsPageProps) => {
     const { blogId } = params;
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post/${blogId}`, {
-            cache: 'no-store'
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch blog');
-        const json = await res.json();
-        blog = json?.data;
+        blog = await getBlogById(blogId);  
     } catch (error) {
         console.log(error);
         blog = null;

@@ -2,7 +2,6 @@ import BlogCard from "@/components/modules/Blogs/BlogCard";
 import { BlogPost } from "@/types";
 import { Metadata } from "next";
 
-
 export const metadata: Metadata = {
     title: "All Blogs | Next Blog",
     description: "Browse all blog posts on web development, Next.js, React and more. Stay updated with the latest lutorials and articales.",

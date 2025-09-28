@@ -7,8 +7,13 @@ export default async function HomePage() {
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post`, {
-      cache: 'no-store'
+      // cache: 'no-store',
+      next: {
+        tags: ["BLOGS"],
+      }
     });
+
+    
 
     if (!res.ok) throw new Error('Failed to fetch posts');
     const json = await res.json();
@@ -17,6 +22,8 @@ export default async function HomePage() {
     console.error(error);
     blogs = [];
   }
+
+  console.log(blogs);
 
     return (
         <div>
