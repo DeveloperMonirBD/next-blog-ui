@@ -23,8 +23,6 @@ export default async function HomePage() {
     blogs = [];
   }
 
-  console.log(blogs);
-
     return (
         <div>
             <Hero />

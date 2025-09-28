@@ -1,21 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import { register } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useRouter } from 'next/navigation';
+import { FieldValues, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-type RegisterFormValues = {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-};
+// type RegisterFormValues = {
+//     name: string;
+//     email: string;
+//     phone: string;
+//     password: string;
+// };
 
 export default function RegisterForm() {
-    const form = useForm<RegisterFormValues>({
+    const form = useForm<FieldValues>({
         defaultValues: {
             name: '',
             email: '',
@@ -24,8 +27,23 @@ export default function RegisterForm() {
         }
     });
 
-    const onSubmit = (values: RegisterFormValues) => {
-        console.log('Form submitted:', values);
+    const router = useRouter();
+
+    const onSubmit = async (values: FieldValues) => {
+        try {
+            const res = await register(values);
+            console.log(res);
+
+            if (res?.id) {
+                toast.success('User Registered Successfully');
+                router.push('/login');
+            } else {
+                toast.error('Registration failed. Please try again.');
+            }
+        } catch (err: any) {
+            console.error(err);
+            toast.error(err.message || 'Something went wrong');
+        }
     };
 
     return (
@@ -33,6 +51,7 @@ export default function RegisterForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                     <h2 className="text-3xl font-bold text-center">Register Now</h2>
+
                     {/* Name */}
                     <FormField
                         control={form.control}
@@ -47,6 +66,7 @@ export default function RegisterForm() {
                             </FormItem>
                         )}
                     />
+
                     {/* Email */}
                     <FormField
                         control={form.control}
@@ -61,6 +81,7 @@ export default function RegisterForm() {
                             </FormItem>
                         )}
                     />
+
                     {/* Phone */}
                     <FormField
                         control={form.control}
@@ -75,6 +96,7 @@ export default function RegisterForm() {
                             </FormItem>
                         )}
                     />
+
                     {/* Password */}
                     <FormField
                         control={form.control}
